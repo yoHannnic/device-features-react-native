@@ -7,7 +7,8 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
+import { Camera } from 'expo-camera'; // Correctly imported Camera component
+import { CameraType } from 'expo-camera'; // Correctly imported CameraType type
 import * as Location from 'expo-location';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 const AddEntryScreen = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
-  const cameraRef = useRef<Camera>(null);
+  const cameraRef = useRef<Camera | null>(null); // Camera ref
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -51,13 +52,12 @@ const AddEntryScreen = () => {
 
       // 3. Save to AsyncStorage
       const newEntry = {
-      id: uuidv4(),
-      photoUri: photo.uri,
-      location: address,
-      latitude: coords.latitude,
-      longitude: coords.longitude,
-    };
-  
+        id: uuidv4(),
+        photoUri: photo.uri,
+        location: address,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
+      };
 
       const data = await AsyncStorage.getItem('entries');
       const entries = data ? JSON.parse(data) : [];
@@ -96,7 +96,8 @@ const AddEntryScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Camera ref={cameraRef} style={styles.camera} type={CameraType.back} />
+      {/* Fixed JSX element type 'Camera' */}
+      <Camera ref={cameraRef} style={styles.camera} type={CameraType.back} /> {/* Correct usage of CameraType */}
       <TouchableOpacity style={styles.button} onPress={handleCapture} disabled={loading}>
         <Text style={styles.buttonText}>{loading ? 'Saving...' : 'Capture & Save'}</Text>
       </TouchableOpacity>

@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Button } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapView, { Marker } from 'react-native-maps';
 
+// Define the Entry type
 type Entry = {
   id: string;
   photoUri: string;
@@ -13,12 +13,15 @@ type Entry = {
   longitude: number;
 };
 
+// Define RouteParams to type the route parameters
 type RouteParams = {
   entryId: string;
 };
 
+// Screen component
 const EntryDetailsScreen = () => {
-  const route = useRoute<RouteProp<Record<string, object | undefined>, 'EntryDetails'>>();
+  const route = useRoute<RouteProp<Record<string, { entryId: string }>, 'EntryDetails'>>();
+  const navigation = useNavigation();
   const { entryId } = route.params;
   const [entry, setEntry] = React.useState<Entry | null>(null);
 
@@ -63,7 +66,7 @@ const EntryDetailsScreen = () => {
       >
         <Marker coordinate={{ latitude: entry.latitude, longitude: entry.longitude }} />
       </MapView>
-      <Button title="Go Back" onPress={() => route.params?.navigation.goBack()} />
+      <Button title="Go Back" onPress={() => navigation.goBack()} />
     </View>
   );
 };

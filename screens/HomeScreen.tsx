@@ -3,7 +3,9 @@ import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, TextInput, S
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';  // <-- Add this import
 
+// Define types
 type Entry = {
   id: string;
   photoUri: string;
@@ -12,11 +14,19 @@ type Entry = {
   longitude: number;
 };
 
+type RootStackParamList = {
+  Home: undefined;
+  EntryDetails: { entryId: string };
+  AddEntry: undefined;
+};
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>; // <-- Navigation typing
+
 const HomeScreen = () => {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [search, setSearch] = useState('');
   const [darkMode, setDarkMode] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<HomeScreenNavigationProp>(); // <-- Use typed navigation
 
   useEffect(() => {
     const loadEntries = async () => {
@@ -85,7 +95,7 @@ const HomeScreen = () => {
       />
       <TouchableOpacity
         style={[styles.addButton, darkMode && styles.darkAddButton]}
-        onPress={() => navigation.navigate('AddEntry' as never)}
+        onPress={() => navigation.navigate('AddEntry')}
       >
         <Text style={styles.addText}>+ Add Entry</Text>
       </TouchableOpacity>
